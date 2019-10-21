@@ -15,45 +15,43 @@ best_move(CurrentPosition, MaxLevel, GoodPos):-
     alphabeta(0,MaxLevel,state(max,CurrentPosition),-9999,9999,GoodPos,_), % find good pos
     retractall(saved_value(_,_)).% delete db
 
-
 alphabeta(CurrentLevel, MaxLevel, Pos, Alpha, Beta, GoodPos, Val)  :-
     saved_value(Pos, Val),!; % if position already explored.
+    NextLevel is CurrentLevel + 1,
+    NextLevel =< MaxLevel,
     moves( Pos, PosList), !,
-    boundedbest(CurrentLevel, MaxLevel, PosList, Alpha, Beta, GoodPos, Val),
+    boundedbest(NextLevel, MaxLevel, PosList, Alpha, Beta, GoodPos, Val),
     assert(saved_value(Pos,Val)); % save explored solution.
     staticval( Pos, Val). % Static value of Pos 
-
+    
 boundedbest(CurrentLevel, MaxLevel, [Pos | PosList], Alpha, Beta, GoodPos, GoodVal)  :-
     alphabeta(CurrentLevel, MaxLevel, Pos, Alpha, Beta, _, Val),
-    NextLevel is CurrentLevel+1,
-    goodenough(NextLevel, MaxLevel, PosList, Alpha, Beta, Pos, Val, GoodPos, GoodVal).
-  
+    goodenough(CurrentLevel, MaxLevel, PosList, Alpha, Beta, Pos, Val, GoodPos, GoodVal).
+      
 goodenough(_,_, [], _, _, Pos, Val, Pos, Val)  :-  !.% No other candidate
-
-goodenough(MaxLevel,MaxLevel,_,_,_,_,_,_,_). % max level achieved.
-
-goodenough( _,_,_, Alpha, Beta, Pos, Val, Pos, Val)  :-
+    
+goodenough(_,_,_, Alpha, Beta, Pos, Val, Pos, Val)  :-
     min_to_move( Pos), Val > Beta, ! % Maximizer attained upper bound
     ;
     max_to_move( Pos), Val < Alpha, !. % Minimizer attained lower bound
-  
+      
 goodenough(CurrentLevel, MaxLevel, PosList, Alpha, Beta, Pos, Val, GoodPos, GoodVal)  :-
     newbounds( Alpha, Beta, Pos, Val, NewAlpha, NewBeta), % Refine bounds  
     boundedbest(CurrentLevel, MaxLevel, PosList, NewAlpha, NewBeta, Pos1, Val1),
     betterof( Pos, Val, Pos1, Val1, GoodPos, GoodVal).
-  
+      
 newbounds( Alpha, Beta, Pos, Val, Val, Beta)  :-
     min_to_move( Pos), Val > Alpha, !. % Maximizer increased lower bound 
-  
+      
 newbounds( Alpha, Beta, Pos, Val, Alpha, Val)  :-
-      max_to_move( Pos), Val < Beta, !. % Minimizer decreased upper bound 
-  
+    max_to_move( Pos), Val < Beta, !. % Minimizer decreased upper bound 
+      
 newbounds( Alpha, Beta, _, _, Alpha, Beta). % Otherwise bounds unchanged 
-  
+      
 betterof( Pos, Val, _, Val1, Pos, Val)  :- % Pos better than Pos1 
     min_to_move( Pos), Val > Val1, !
     ;
     max_to_move( Pos), Val < Val1, !.
-  
+      
 betterof( _, _, Pos1, Val1, Pos1, Val1). % Otherwise Pos1 better
-  
+      
