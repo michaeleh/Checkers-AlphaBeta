@@ -6,7 +6,7 @@
 * */
 :- consult('heuristic_static_values.pl'). % import staticval impl.
 :- consult('possible_states.pl'). % import possible states impl.
-:- consult('../levels.pl'). % import possible states impl.
+:- consult('../levels.pl'). % import levels impl.
 ?- assert(saved_value(0,0)). % dummy value for compiler.
 
 /** given a position find best next move for computer **/
