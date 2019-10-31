@@ -1,7 +1,5 @@
 :- consult('../alphabeta/possible_states.pl'). % import possible states impl.
 
-% מלכה שאוכלת אחורה
-% מלכה שאוכלת אחורה כפול
 run:-
     % One in the corner with only 1 way to move
     moves(state(max,game([piece(7,7,black,false)],settings(9,8))),
