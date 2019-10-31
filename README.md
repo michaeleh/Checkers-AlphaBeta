@@ -16,14 +16,14 @@ from a json in a format of such:
         		"i":1,
         		"j":2,
         		"color":"white",
-        		"isQueen":0
+        		"isQueen":false
 
         	},
         	{
         		"i":11,
         		"j":21,
         		"color":"black",
-        		"isQueen":1
+        		"isQueen":true
 
         	}
 
@@ -40,5 +40,5 @@ from a json in a format of such:
 it will convert it to a structure of such:
 
 ```
- game([piece(1,2,"white",0),piece(11,21,"black",1)],settings(6,9))
+ game([piece(1,2,"white",false),piece(11,21,"black",true)],settings(6,9))
 ```
