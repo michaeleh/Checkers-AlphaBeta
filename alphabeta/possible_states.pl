@@ -43,7 +43,6 @@ canMoveTo(Piece,SubPieces,Rows,NewPieces):-
 newIndex(piece(I,J,Color,false),Row,piece(NewI,NewJ,Color,false)):-
     NewI is I + 1, (NewJ is J+1 ; NewJ is J-1), % progress the rows and move left or right collumn
     inRange(NewI,Row), inRange(NewJ,Row). % check if the new piece is in range
-
 /**
  * if the peices is on the board
  * */
@@ -55,15 +54,16 @@ inRange(Index,Row):-
  * check if can eat then update the board
  * */
 eat(OldPiece,NewPiece, SubPieces, Rows, EatenList):-
-    NewPiece = piece(I,J,Color,_),
+    NewPiece = piece(I,J,Color,IsQ),
     not(member(piece(I,J,Color,_),SubPieces)), % not with the same color
     doubleIndex(OldPiece,NewPiece,AfterEatPiece,Rows), % get indexes after eating
     AfterEatPiece = piece(EatI,EatJ,_,_),
     not(member(piece(EatI,EatJ,_,_),SubPieces)), % check if the place is empty
     delete(SubPieces, piece(I,J,_,_), EatenList1),  % delete the eaten piece.
     (EatenList = [AfterEatPiece|EatenList1]; % eat once
-     % check if can eat again
-    newIndex(AfterEatPiece,Rows,piece(NewI,NewJ,Color,IsQ)), % new indexes for the piece
+    % check if can eat again
+    (newIndex(AfterEatPiece,Rows,piece(NewI,NewJ,Color,IsQ)); % new indexes for the piece
+    BackI is EatI-2, newIndex(piece(BackI,EatJ,Color,IsQ),Rows,piece(NewI,NewJ,Color,IsQ))), % eat backwards, move the I index back twice and use forward move to mock backward move
     member(piece(NewI,NewJ,_,_),EatenList1),!, % if occupied then eat
     eat(AfterEatPiece,piece(NewI,NewJ,Color,IsQ),EatenList1,Rows,EatenList)). % check if can eat again
 
@@ -72,8 +72,8 @@ eat(OldPiece,NewPiece, SubPieces, Rows, EatenList):-
  * in case of eating
  * compute the diagonal path of the piece after eating a rival
  * */
-doubleIndex(piece(_,J,Color,IsQ),piece(NewI,NewJ,Color,IsQ),piece(EatI,EatJ,Color,IsQ),Rows):-
-    EatI is NewI + 1, % move up 
+doubleIndex(piece(I,J,Color,IsQ),piece(NewI,NewJ,Color,IsQ),piece(EatI,EatJ,Color,IsQ),Rows):-
+    EatI is I + 2*(NewI-I), % move up 
     EatJ is J + 2*(NewJ-J), % move in the diagonal direction twice
     inRange(EatJ,Rows), % check if still in range
     inRange(EatI,Rows). % check if still in range
