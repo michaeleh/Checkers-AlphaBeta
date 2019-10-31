@@ -33,7 +33,7 @@ movePiece(Piece,game(Pieces,settings(Level,Rows)),game(NewPieces,settings(Level,
  * */
 canMoveTo(Piece,SubPieces,Rows,NewPieces):-
     newIndex(Piece,Rows,piece(I,J,Color,IsQ)), % new indexes for the piece
-    ( member(piece(I,J,_,_),SubPieces),!, % if occupied than eat
+    ( member(piece(I,J,_,_),SubPieces),!, % if occupied then eat
     eat(Piece,piece(I,J,Color,IsQ),SubPieces,Rows,NewPieces); % eat the peice and update
     NewPieces = [piece(I,J,Color,IsQ)|SubPieces]). % if empty place then procees
 
@@ -54,13 +54,19 @@ inRange(Index,Row):-
  * Eating logic
  * check if can eat then update the board
  * */
-eat(OldPiece,NewPiece, SubPieces, Rows, [AfterEatPiece|EatenList]):-
+eat(OldPiece,NewPiece, SubPieces, Rows, EatenList):-
     NewPiece = piece(I,J,Color,_),
     not(member(piece(I,J,Color,_),SubPieces)), % not with the same color
     doubleIndex(OldPiece,NewPiece,AfterEatPiece,Rows), % get indexes after eating
     AfterEatPiece = piece(EatI,EatJ,_,_),
     not(member(piece(EatI,EatJ,_,_),SubPieces)), % check if the place is empty
-    delete(SubPieces, piece(I,J,_,_), EatenList). % delete the eaten piece.
+    delete(SubPieces, piece(I,J,_,_), EatenList1),  % delete the eaten piece.
+    (EatenList = [AfterEatPiece|EatenList1]; % eat once
+     % check if can eat again
+    newIndex(AfterEatPiece,Rows,piece(NewI,NewJ,Color,IsQ)), % new indexes for the piece
+    member(piece(NewI,NewJ,_,_),EatenList1),!, % if occupied then eat
+    eat(AfterEatPiece,piece(NewI,NewJ,Color,IsQ),EatenList1,Rows,EatenList)). % check if can eat again
+
 
 /**
  * in case of eating
