@@ -17,7 +17,7 @@ switchTurn(max,min). % switch turn
  * return the next position of the game after your move
  * */
 possibleMoves(Color,game([Piece|Pieces],settings(Level,Rows)),Pos,NextPos):-
-    Piece = piece(_,_,Color,_), movePiece(Piece,Pos,NextPos); % move the piece
+    Piece = piece(_,_,Color,_), movePiece(Piece,Pos,NextPos1), checkForQueens(NextPos1,NextPos); % move the piece
     possibleMoves(Color,game(Pieces,settings(Level,Rows)),Pos,NextPos). % move a different piece 
 
 /**
@@ -44,7 +44,9 @@ newIndex(piece(I,J,Color,IsQ),Row,piece(NewI,NewJ,Color,IsQ)):-
     newI(piece(I,J,Color,IsQ),NewI), (NewJ is J+1 ; NewJ is J-1), % progress the rows and move left or right collumn
     inRange(NewI,Row), inRange(NewJ,Row). % check if the new piece is in range
 
-
+/**
+ * progress I according to board direction
+ * */
 newI(piece(I,_,_,true),NewI):-  NewI is I-1; NewI is I+1.
 newI(piece(I,_,white,false),NewI):-   NewI is I+1.
 newI(piece(I,_,black,false),NewI):-   NewI is I-1.
@@ -72,6 +74,11 @@ eat(OldPiece,NewPiece, SubPieces, Rows, EatenList):-
     member(piece(NewI,NewJ,_,_),EatenList1),!, % if occupied then eat
     eat(AfterEatPiece,piece(NewI,NewJ,Color,IsQ),EatenList1,Rows,EatenList)). % check if can eat again
 
+/**
+ * move back 2 rows according to color
+ * used for moving back 2 times then moving forward once to simulate 
+ * moving back once
+ * */
 drawBack(piece(I,_,Color,_),NewI):-
     Color=black,!, newI(piece(I,_,white,_),NewI1),newI(piece(NewI1,_,white,_),NewI);
     newI(piece(I,_,black,_),NewI1),newI(piece(NewI1,_,black,_),NewI).
@@ -95,3 +102,18 @@ min_to_move(state(min,_)). % min turn to move
  * */
 color(min,black).
 color(max,white).
+
+/**
+ * checking for new queens in new game state
+ * */
+checkForQueens(game([],settings(Level,Rows)),game([],settings(Level,Rows))).
+checkForQueens(game([Piece|Pieces],settings(Level,Rows)),game(NewPieces,settings(Level,Rows))):-
+    checkForQueens(game(Pieces,settings(Level,Rows)),game(NewSubPieces,settings(Level,Rows))),
+    queenIfNecessery(Piece,QueenPiece,Rows), NewPieces = [QueenPiece|NewSubPieces].
+
+
+/** making a peice a queen if necessery **/
+queenIfNecessery(piece(I,J,Color,IsQueen),piece(I,J,Color,NewStatus),Rows):-
+    Color==black, I==0,!, NewStatus=true;
+    Color==white, I is Rows -1,!, NewStatus=true;
+    NewStatus=IsQueen.
