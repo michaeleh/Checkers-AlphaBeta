@@ -2,7 +2,7 @@
 
 % מלכה שאוכלת אחורה
 % מלכה שאוכלת אחורה כפול
-run(X):-
+run:-
     % One in the corner with only 1 way to move
     moves(state(max,game([piece(7,7,black,false)],settings(9,8))),
     [state(min, game([piece(6, 6, black, false)], settings(9, 8)))]),
