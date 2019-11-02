@@ -103,6 +103,7 @@ min_to_move(state(min,_)). % min turn to move
 color(min,black).
 color(max,white).
 
+
 /**
  * checking for new queens in new game state
  * */
