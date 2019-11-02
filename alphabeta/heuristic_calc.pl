@@ -18,7 +18,7 @@ capturing priority;
  */ 
 
 % Pos -> state(max ,game( [piece(i,j,Color,isQueen)], settings(level,row))
-heuristic_calc_for_pos(state(Player, game(ListOfPieces, settings(Level, Rows))), Val):-
+heuristic_calc_for_pos(state(Player, game(ListOfPieces, settings(_, Rows))), Val):-
     color(Player, CurrentPlayer),
     otherColor(CurrentPlayer, RivalColor),
     heuristic_calc_for_player(CurrentPlayer, ListOfPieces, Rows, CurrPlayerVal),
@@ -60,9 +60,9 @@ heuristic_calc_for_player(Player, ListOfPieces, NumberOfRows, Val):-
  * 
  * returns the promotion line index based on the color of the player and the settings
  */ 
-promotionLine(black, NumberOfRows, PromotionLine):-
+promotionLine(white, NumberOfRows, PromotionLine):-
     PromotionLine is NumberOfRows - 1.
-promotionLine(white, _, 0).
+promotionLine(black, _, 0).
 
 absSub(X, Y, Sum):-
     X > Y, !,
@@ -74,28 +74,28 @@ absSub(X, Y, Sum):-
 /**
  * numberOfUnoccupiedFieldsOnPromotionLine(Turn, ListOfPieces, NumberOfRows, Sum) - 
  * 
- * Sums the number of unoccupied fields on promotion line for TurnPlayer - (uses numberOfOccupiedDieldsOnPromotionLine)
+ * Sums the number of unoccupied fields on promotion line for TurnPlayer - (uses numberOfOccupiedFieldsOnPromotionLine)
  */
 numberOfUnoccupiedFieldsOnPromotionLine(Turn, ListOfPieces, NumberOfRows, Sum):-
-    numberOfOccupiedDieldsOnPromotionLine(Turn, ListOfPieces, NumberOfRows, RivalOnPromotionLine),
-    Sum is (NumberOfRows / 2) - RivalOnPromotionLine.
+    numberOfOccupiedFieldsOnPromotionLine(Turn, ListOfPieces, NumberOfRows, RivalOnPromotionLine),
+    Sum is (NumberOfRows // 2) - RivalOnPromotionLine.
 
 /**
- * numberOfOccupiedDieldsOnPromotionLine(Turn, ListOfPieces, NumberOfRows, Sum) - 
+ * numberOfOccupiedFieldsOnPromotionLine(Turn, ListOfPieces, NumberOfRows, Sum) - 
  * 
  * Sums the number of occupied fields on promotion line for TurnPlayer.
  */ 
-numberOfOccupiedDieldsOnPromotionLine(_, [], _, 0):- !.  % finished the list
-numberOfOccupiedDieldsOnPromotionLine(Turn, [piece(Row, _, OtherPlayer, _) | Tail], NumberOfRows, Sum):-
+numberOfOccupiedFieldsOnPromotionLine(_, [], _, 0):- !.  % finished the list
+numberOfOccupiedFieldsOnPromotionLine(Turn, [piece(Row, _, OtherPlayer, _) | Tail], NumberOfRows, Sum):-
     OtherPlayer \= Turn, % check that the piece is for the rival player 
     promotionLine(Turn, NumberOfRows, Row), !, % get the promotion line for current player
     % at this point, we know that it's the rival piece, and it is on the promotion line
-    numberOfOccupiedDieldsOnPromotionLine(Turn, Tail, NumberOfRows, SumTail),
+    numberOfOccupiedFieldsOnPromotionLine(Turn, Tail, NumberOfRows, SumTail),
     % add 1 to recursion sum
     Sum is SumTail + 1.
-numberOfOccupiedDieldsOnPromotionLine(Turn, [piece(_, _, _, _) | Tail], NumberOfRows, Sum):-
+numberOfOccupiedFieldsOnPromotionLine(Turn, [piece(_, _, _, _) | Tail], NumberOfRows, Sum):-
      % otherwise -> don't sum, move to next piece
-    numberOfOccupiedDieldsOnPromotionLine(Turn, Tail, NumberOfRows, Sum).
+    numberOfOccupiedFieldsOnPromotionLine(Turn, Tail, NumberOfRows, Sum).
 
 
 
@@ -108,8 +108,9 @@ aggregatedDistanceOfPawnsToPromotionLine(_, [], _, 0):- !.  % finished the list
 aggregatedDistanceOfPawnsToPromotionLine(Turn, [piece(Row, _, Turn, false) | Tail], NumberOfRows, Sum):-
     !, 
     aggregatedDistanceOfPawnsToPromotionLine(Turn, Tail, NumberOfRows, SumTail), % recursive sum
-    absSub(Row, NumberOfRows, DistanceToPromotionLine), % calc distance 
-    Sum is SumTail + (DistanceToPromotionLine - 1). % add recursive sum to current piece distance
+    promotionLine(Turn, NumberOfRows, PromotionLine),
+    absSub(Row, PromotionLine, DistanceToPromotionLine), % calc distance 
+    Sum is SumTail + DistanceToPromotionLine. % add recursive sum to current piece distance
 aggregatedDistanceOfPawnsToPromotionLine(Turn, [piece(_, _, _, _) | Tail], NumberOfRows, Sum):-
     % piece isn't suitable -> check the next piece
     aggregatedDistanceOfPawnsToPromotionLine(Turn, Tail, NumberOfRows, Sum). 
