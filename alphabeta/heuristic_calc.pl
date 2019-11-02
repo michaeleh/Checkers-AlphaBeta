@@ -48,7 +48,7 @@ heuristic_calc_for_player(Player, ListOfPieces, NumberOfRows, Val):-
     SafeQueens * 4 +
     MoveablePawns * 2 +
     MoveableQueens * 4 +
-    AggregatedDistancePawns * 2,
+    AggregatedDistancePawns * 2 +
     UnoccupiedFields
     ).
 
@@ -166,7 +166,7 @@ numberOfSafePawns(Turn, ListOfPieces, NumberOfRows, Sum):-
  * Sums the number of "safe" queens pawns for Turn player.
  * Uses numberOfSafePiece
  */ 
-numberOfSafePawns(Turn, ListOfPieces, NumberOfRows, Sum):- 
+numberOfSafeQueens(Turn, ListOfPieces, NumberOfRows, Sum):- 
     numberOfSafePiece(Turn, ListOfPieces, true, NumberOfRows, Sum).
 
 
