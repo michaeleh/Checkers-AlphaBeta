@@ -46,4 +46,12 @@ run:-
         [piece(7,4,black,false), piece(7,4,black,false), piece(7,4,black,false),piece(7,2,black,true)]
         , 8, 0),
 
-    writeln('numberOfUnoccupiedFieldsOnPromotionLine - done!').
+    writeln('numberOfUnoccupiedFieldsOnPromotionLine - done!'),
+
+    PiecesList = [piece(0,1,white,false),piece(2,1,white,true)],
+    numberOfMoveablePieces(white, PiecesList, PiecesList, false, 8, 1),
+    numberOfMoveablePieces(white, PiecesList, PiecesList, true, 8, 1),
+    numberOfMoveablePieces(black, PiecesList, PiecesList, true, 8, 0),
+
+    writeln('numberOfMoveablePieces - done!').
+
