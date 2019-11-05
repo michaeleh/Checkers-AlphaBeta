@@ -1,4 +1,4 @@
-:- consult('../alphabeta/possible_states.pl'). % import possible states impl.
+:- consult('alphabeta/possible_states.pl'). % import possible states impl.
 
 run:-
     % One in the corner with only 1 way to move

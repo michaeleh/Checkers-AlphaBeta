@@ -6,9 +6,12 @@
 :- use_module(library(http/http_server_files)).
 :- use_module(library(http/http_files)).
 :- use_module(library(http/http_json)).
+:- use_module(library(http/json_convert)).
 :- use_module(library(http/http_header)).
 :- http_handler(root(.),handle_request,[]).
-:- consult('json_to_structure_parser.pl').
+:- consult('api/json_to_structure_parser.pl').
+:- consult('alphabeta/alpha_beta.pl').
+
 
 % start server at port 3000.
 start:-
@@ -21,7 +24,9 @@ handle_request(Request) :-
     reply_json(Response). % reply best move
 
 handle_json(Json,Response):-
-    format(user_output,"Received Play~n",[]),
+    format(user_output,"Received Play ~n ",[]),
     parse_game(Json, Game), % parse as structure
-    format(user_output," ~p~n",[Game]),
-    Response=Json. % set response
+    Game = game(_,settings(Level,_)), % get level
+    best_move(Game,Level,NextMove), % get next move
+    NextMove = game(PeicesList,_), % get the pieces
+    prolog_to_json(PeicesList, Response). % sending response
