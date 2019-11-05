@@ -1,36 +1,41 @@
 :-consult('possible_states.pl').
 
-/*
-
-Heuristics described in this paper are relatively simple and make use of some or all of the
-following parameters, calculated separately for each player:
-
-1. Number of pawns;
-2. Number of queens;
-3. Number of safe pawns (i.e. adjacent to the edge of the board);
-4. Number of safe queens;
-5. Number of moveable pawns (i.e. able to perform a move other than capturing).
-6. Number of moveable queens. Parameters 5 and 6 are calculated taking no notice of
-capturing priority;
-7. Aggregated distance of the pawns to promotion line;
-8. Number of unoccupied fields on promotion line.
-
+/**
+ * heuristic_calc_for_pos(State, Val):-
+ * 
+ * Calculates the Heuristics values for a given state.
+ * Uses heuristic_calc_for_player.
+ * The final result is the sub between the two player's values
  */ 
-
 heuristic_calc_for_pos(state(Player, game(ListOfPieces, settings(_, Rows))), Val):-
+    % convert from min/max to player color
     color(Player, CurrentPlayer),
+    % get rival color
     otherColor(CurrentPlayer, RivalColor),
+    % calculate heuristic value for current player
     heuristic_calc_for_player(CurrentPlayer, ListOfPieces, Rows, CurrPlayerVal),
+    % calculate heuristic value for rival player
     heuristic_calc_for_player(RivalColor, ListOfPieces, Rows, RivalPlayerVal),
+    % the heuristic value is the sub of the two
     Val is CurrPlayerVal - RivalPlayerVal.
-    % calc current player stats:
+
 
 /**
- * get rival color
- */
-otherColor(black, white).
-otherColor(white, black).    
-
+ * heuristic_calc_for_player(Player, ListOfPieces, NumberOfRows, Val)- 
+ * 
+ * Calculates and returns the following heuristics:
+ * 
+ * 1. Number of pawns;
+ * 2. Number of queens;
+ * 3. Number of safe pawns (i.e. adjacent to the edge of the board);
+ * 4. Number of safe queens;
+ * 5. Number of moveable pawns (i.e. able to perform a move other than capturing).
+ * 6. Number of moveable queens. Parameters 5 and 6 are calculated taking no notice of
+        capturing priority;
+ * 7. Aggregated distance of the pawns to promotion line;
+ * 8. Number of unoccupied fields on promotion line.
+ * 
+ */ 
 heuristic_calc_for_player(Player, ListOfPieces, NumberOfRows, Val):-
     numberOfPawns(Player, ListOfPieces, Pawns),
     numberOfQueens(Player, ListOfPieces, Queens),
@@ -51,7 +56,11 @@ heuristic_calc_for_player(Player, ListOfPieces, NumberOfRows, Val):-
     UnoccupiedFields
     ).
 
-
+/**
+ * get rival color
+ */
+otherColor(black, white).
+otherColor(white, black).    
 
 
 /**
@@ -63,10 +72,19 @@ promotionLine(white, NumberOfRows, PromotionLine):-
     PromotionLine is NumberOfRows - 1.
 promotionLine(black, _, 0).
 
+/**
+ * absSub(X, Y, Sum) - 
+ * 
+ * sub the two numbers and return the absolute value 
+
+ */ 
 absSub(X, Y, Sum):-
-    X > Y, !,
+    % if X is bigger the Y
+    X > Y, !, 
+    % absolute value is only sub
     Sum is X - Y.
 absSub(X, Y, Sum):-
+    % At this point we know that: Y >= X, so return Y - X
     Sum is Y - X.
 
 
@@ -76,7 +94,9 @@ absSub(X, Y, Sum):-
  * Sums the number of unoccupied fields on promotion line for TurnPlayer - (uses numberOfOccupiedFieldsOnPromotionLine)
  */
 numberOfUnoccupiedFieldsOnPromotionLine(Turn, ListOfPieces, NumberOfRows, Sum):-
+    % get number of occupied fields by rival on promotion line
     numberOfOccupiedFieldsOnPromotionLine(Turn, ListOfPieces, NumberOfRows, RivalOnPromotionLine),
+    % sub total reachable places on promotion line and occupied fields
     Sum is (NumberOfRows // 2) - RivalOnPromotionLine.
 
 /**
