@@ -17,7 +17,6 @@ capturing priority;
 
  */ 
 
-% Pos -> state(max ,game( [piece(i,j,Color,isQueen)], settings(level,row))
 heuristic_calc_for_pos(state(Player, game(ListOfPieces, settings(_, Rows))), Val):-
     color(Player, CurrentPlayer),
     otherColor(CurrentPlayer, RivalColor),
