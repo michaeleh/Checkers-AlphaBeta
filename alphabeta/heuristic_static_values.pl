@@ -4,17 +4,15 @@
  * using a heuristic predicates
  * */
 :- consult('heuristic_calc.pl'). % import possible states impl.
-% TODO, check max and min values of the hueristic function to use as parameters in alpha beta
 ?- assert(saved_value(0,0)). % dummy value for compiler.
 
- % TODO: impl heuristic_static_values for start/middle and endgame.
 staticval(Pos, Val):-
-    % value us already in db
-    retract(saved_value(Pos, Val)), ! % remove from db
-    assert(saved_value(Pos, Val)).  % add it again 
+    % value is already in db
+    saved_value(Pos,Val).
 
 staticval(Pos, Val):-
-    heuristic_calc_for_pos(Pos, Val), !,
-    assert(saved_value(Pos, Val)).
+    % (value isn't in db)
+    heuristic_calc_for_pos(Pos, Val), !, % calc value
+    assert(saved_value(Pos, Val)). % add it to db
 
         
