@@ -97,11 +97,11 @@ min_to_move(state(min,_)). % min turn to move
 
 /**
  * color to control
- * max - computer is white
- * min - player is black
+ * max - computer is black
+ * min - player is white
  * */
-color(min,black).
-color(max,white).
+color(min,white).
+color(max,black).
 
 
 /**
