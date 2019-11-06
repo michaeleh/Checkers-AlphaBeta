@@ -21,7 +21,6 @@ start:-
 handle_request(Request) :-
     http_read_json_dict(Request, DictIn), % read json as dict
     handle_json(DictIn,Response), % handle request
-    format(user_output,"Returning Play ~p~n ",[Response]),
     reply_json(Response). % reply best move
 
 handle_json(Json,Response):-

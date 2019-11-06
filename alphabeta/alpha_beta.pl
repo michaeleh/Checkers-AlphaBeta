@@ -11,7 +11,7 @@
 /** given a position find best next move for computer **/
 best_move(CurrentPosition, MaxLevel, GoodPos):-
     % TODO, check max and min values of the hueristic function
-    alphabeta(0,MaxLevel,state(max,CurrentPosition),-9999,9999,GoodPos,_), % find good pos
+    alphabeta(0,MaxLevel,state(max,CurrentPosition),-9999999,9999999,GoodPos,_), % find good pos
     retractall(saved_value(_,_)).% delete db
 
 alphabeta(CurrentLevel, MaxLevel, Pos, Alpha, Beta, GoodPos, Val)  :-

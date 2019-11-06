@@ -47,8 +47,8 @@ heuristic_calc_for_player(Player, ListOfPieces, NumberOfRows, Val):-
     numberOfUnoccupiedFieldsOnPromotionLine(Player, ListOfPieces, NumberOfRows, UnoccupiedFields),
     Val is (
     Pawns + 
-    Queens * 2 + 
-    SafePawns * 3 +
+    Queens * 3 + 
+    SafePawns * 2 +
     SafeQueens * 4 +
     MoveablePawns * 2 +
     MoveableQueens * 4 +
