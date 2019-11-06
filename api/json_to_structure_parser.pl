@@ -2,6 +2,11 @@
  * This file contains parsers from json to a prolog structure
  * */
 
+%defining the json structure for response
+:- json_object
+      piece(i:integer, j:integer, color:atom, isQueen:atom).
+
+
 /**
 * receives a json dict and convert it to a structure
 **/
@@ -19,9 +24,6 @@ pieces_list([JsonObj|JsonArray], PiecesList):-
     pieces_list(JsonArray,SubList), % proceed to the end of the list
     I = JsonObj.i,
     J = JsonObj.j,
-    Color = JsonObj.color,
-    IsQueen = JsonObj.isQueen,
+    atom_string(Color,JsonObj.color),% to atom
+    atom_string(IsQueen,JsonObj.isQueen),% to atom
     PiecesList = [piece(I,J,Color,IsQueen)| SubList]. % add the piece as structure
-
-
-
