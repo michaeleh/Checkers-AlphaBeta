@@ -1,4 +1,4 @@
-:- consult('../alphabeta/heuristic_calc.pl'). % import possible states impl.
+:- consult('alphabeta/heuristic_calc.pl'). % import possible states impl.
 
 run:-
     % test numberOfPawns
@@ -35,16 +35,16 @@ run:-
     writeln('aggregatedDistanceOfPawnsToPromotionLine - done!'),
 
     numberOfUnoccupiedFieldsOnPromotionLine(white, [piece(4,0,white,false),piece(4,2,white,true)], 4, 2),
-    numberOfUnoccupiedFieldsOnPromotionLine(black, [piece(0,4,black,false),piece(0,2,black,true)], 4, 2),
-    numberOfUnoccupiedFieldsOnPromotionLine(black, [piece(0,4,black,false), piece(0,1,black,false)], 4, 2),
+    numberOfUnoccupiedFieldsOnPromotionLine(black, [piece(0,4,black,false),piece(0,2,black,true)], 4, 0),
+    numberOfUnoccupiedFieldsOnPromotionLine(black, [piece(1,4,black,false), piece(2,1,black,false)], 4, 2),
     numberOfUnoccupiedFieldsOnPromotionLine(black, 
         [piece(0,4,white,false), piece(0,4,white,false), piece(0,4,white,false),piece(0,2,black,true)]
-        , 8, 1),
+        , 8, 0),
     numberOfUnoccupiedFieldsOnPromotionLine(white, 
-            [piece(7,4,black,false), piece(7,2,black,false), piece(7,4,white,false),piece(7,2,black,true)]
+            [piece(7,4,black,false), piece(7,2,black,false), piece(6,4,white,false),piece(7,2,black,true)]
             , 8, 1),
     numberOfUnoccupiedFieldsOnPromotionLine(white, 
-        [piece(7,4,black,false), piece(7,4,black,false), piece(7,4,black,false),piece(7,2,black,true)]
+        [piece(7,1,black,false), piece(7,3,black,false), piece(7,5,black,false),piece(7,6,black,true)]
         , 8, 0),
 
     writeln('numberOfUnoccupiedFieldsOnPromotionLine - done!'),

@@ -1,4 +1,4 @@
-:-consult('possible_states.pl').
+:-consult('alphabeta/possible_states.pl').
 
 /**
  * heuristic_calc_for_pos(State, Val):-
@@ -102,11 +102,10 @@ numberOfUnoccupiedFieldsOnPromotionLine(Turn, ListOfPieces, NumberOfRows, Sum):-
 /**
  * numberOfOccupiedFieldsOnPromotionLine(Turn, ListOfPieces, NumberOfRows, Sum) - 
  * 
- * Sums the number of occupied fields on promotion line for TurnPlayer.
+ * Sums the number of occupied fields on promotion line.
  */ 
 numberOfOccupiedFieldsOnPromotionLine(_, [], _, 0):- !.  % finished the list
-numberOfOccupiedFieldsOnPromotionLine(Turn, [piece(Row, _, OtherPlayer, _) | Tail], NumberOfRows, Sum):-
-    OtherPlayer \= Turn, % check that the piece is for the rival player 
+numberOfOccupiedFieldsOnPromotionLine(Turn, [piece(Row, _, _, _) | Tail], NumberOfRows, Sum):-
     promotionLine(Turn, NumberOfRows, Row), !, % get the promotion line for current player
     % at this point, we know that it's the rival piece, and it is on the promotion line
     numberOfOccupiedFieldsOnPromotionLine(Turn, Tail, NumberOfRows, SumTail),
