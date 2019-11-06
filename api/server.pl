@@ -9,8 +9,8 @@
 :- use_module(library(http/json_convert)).
 :- use_module(library(http/http_header)).
 :- http_handler(root(.),handle_request,[]).
-:- consult('api/json_to_structure_parser.pl').
-:- consult('alphabeta/alpha_beta.pl').
+:- consult('json_to_structure_parser.pl').
+:- consult('../alphabeta/alpha_beta.pl').
 
 
 % start server at port 3000.
@@ -28,5 +28,6 @@ handle_json(Json,Response):-
     parse_game(Json, Game), % parse as structure
     Game = game(_,settings(Level,_)), % get level
     best_move(Game,Level,NextMove), % get next move
-    NextMove = game(PeicesList,_), % get the pieces
+    NextMove = state(_,game(PeicesList,_)), % get the pieces
     prolog_to_json(PeicesList, Response). % sending response
+

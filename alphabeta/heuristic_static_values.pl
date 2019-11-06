@@ -3,7 +3,7 @@
  * for calculating static values for a position
  * using a heuristic predicates
  * */
-:- consult('alphabeta/heuristic_calc.pl'). % import possible states impl.
+:- consult('heuristic_calc.pl'). % import possible states impl.
 ?- assert(saved_value(0,0)). % dummy value for compiler.
 
 staticval(Pos, Val):-

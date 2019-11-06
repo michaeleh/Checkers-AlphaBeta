@@ -1,4 +1,4 @@
-:-consult('alphabeta/possible_states.pl').
+:-consult('possible_states.pl').
 
 /**
  * heuristic_calc_for_pos(State, Val):-
