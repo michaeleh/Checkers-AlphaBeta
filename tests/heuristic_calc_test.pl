@@ -15,7 +15,7 @@ run:-
     numberOfQueens(white, [piece(3,3,white,true),piece(4,4,white,true)], 2),
     writeln('numberOfQueens - done!'),
 
-    numberOfSafePawns(white, [piece(0,0,black,false),piece(5,4,black,true)], 6, 0),
+    numberOfSafePawns(white, [piece(3,3,white,false),piece(5,4,black,true)], 6, 0),
     numberOfSafePawns(white, [piece(0,0,white,false),piece(5,4,white,false)], 6, 2),
     numberOfSafePawns(white, [piece(0,0,white,false),piece(4,4,white,false)], 5, 2),
     numberOfSafePawns(white, [piece(0,0,white,false),piece(4,4,white,true)], 5, 1),
@@ -28,6 +28,7 @@ run:-
     writeln('numberOfSafeQueens - done!'),
 
     aggregatedDistanceOfPawnsToPromotionLine(white, [piece(0,0,white,false),piece(2,2,white,true)], 5, 4),
+    aggregatedDistanceOfPawnsToPromotionLine(white, [piece(0,0,white,false),piece(1,0,white,false), piece(2,2,white,true)], 5, 7),
     aggregatedDistanceOfPawnsToPromotionLine(black, [piece(4,4,black,false),piece(2,2,black,true)], 5, 4),
     aggregatedDistanceOfPawnsToPromotionLine(white, [piece(0,0,white,true),piece(4,4,white,true)], 5, 0),
 
