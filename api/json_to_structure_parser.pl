@@ -39,8 +39,9 @@ alphabeta_depth(Pieces,Level, Depth):-
     factor(Level,Factor), % use factor for high medium low
     DepthFactor is D1/Factor,
     round(DepthFactor,DepthRound),
-    max(1,DepthRound,Depth).
-    
+    max(1,DepthRound,Depth). % dont let it be lower than 1
+
+% max out of 2 numbers 
 max(A,B,X):- A>B,!,X=A;X=B.
 % to multyply by this factor to get the level 
 factor(hard,1).
