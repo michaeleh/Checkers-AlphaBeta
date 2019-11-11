@@ -2,7 +2,6 @@
 * Figure 22.5  An implementation of the alpha-beta algorithm.
 * from http://media.pearsoncmg.com/intl/ema/ema_uk_he_bratko_prolog_3/prolog/ch22/fig22_5.txt
 * improving alpha beta algorithm with db saving
-* TODO: remeber to sort position tree from best to worst for max pruninng
 * */
 :- consult('heuristic_static_values.pl'). % import staticval impl.
 :- consult('possible_states.pl'). % import possible states impl.
@@ -10,7 +9,6 @@
 
 /** given a position find best next move for computer **/
 best_move(CurrentPosition, MaxLevel, GoodPos):-
-    % TODO, check max and min values of the hueristic function
     alphabeta(0,MaxLevel,state(max,CurrentPosition),-9999999,9999999,GoodPos,_), % find good pos
     retractall(saved_value(_,_)).% delete db
 
