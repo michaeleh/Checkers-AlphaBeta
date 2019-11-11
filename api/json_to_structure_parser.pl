@@ -38,8 +38,10 @@ alphabeta_depth(Pieces,Level, Depth):-
     D1 is 9 - NumPieces//5, % transform the number of peices to a depth using negative relation fomula
     factor(Level,Factor), % use factor for high medium low
     DepthFactor is D1/Factor,
-    round(DepthFactor,Depth).
-
+    round(DepthFactor,DepthRound),
+    max(1,DepthRound,Depth).
+    
+max(A,B,X):- A>B,!,X=A;X=B.
 % to multyply by this factor to get the level 
 factor(hard,1).
 factor(medium,1.5).
