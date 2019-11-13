@@ -29,8 +29,8 @@ from a json in a format of such:
     	],
     "settings":
         {
-    	    "level":6,
-    	    "rows": 9
+    	    "level":"easy",
+    	    "rows": 8
         }
 
 }
