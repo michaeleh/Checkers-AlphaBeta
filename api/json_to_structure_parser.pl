@@ -39,7 +39,9 @@ alphabeta_depth(Pieces,Level, Depth):-
     factor(Level,Factor), % use factor for high medium low
     DepthFactor is D1/Factor,
     round(DepthFactor,DepthRound),
-    max(1,DepthRound,Depth). % dont let it be lower than 1
+    max(1,DepthRound,DepthMax), % dont let it be lower than 1
+    choose_non_even(DepthMax, Depth),
+    format(user_output,"depth: ~p~n",[Depth]).
 
 % max out of 2 numbers 
 max(A,B,X):- A>B,!,X=A;X=B.
@@ -47,3 +49,9 @@ max(A,B,X):- A>B,!,X=A;X=B.
 factor(hard,1).
 factor(medium,1.5).
 factor(easy,3).
+
+% get odd level (even is helping the other player)
+choose_non_even(DepthMax, DepthMax):-
+    DepthMax /\ 1 =:= 1, !.
+choose_non_even(DepthMax, Depth):-
+    Depth is DepthMax + 1.
